@@ -183,7 +183,8 @@ function handleCardId(data)
       figure[foundIndex].SetYpos(originYPos);
       figure[foundIndex].SetZpos(originZPos);
       isShowingDuplicate = false;
-      isRotation = true;
+      //isRotation = true;
+      interval = setInterval(rotateGroup, 30000); 
     }
    
   }
