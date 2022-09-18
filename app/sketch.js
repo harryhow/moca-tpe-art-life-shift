@@ -30,6 +30,7 @@ let totalGroupCount = 0;
 let showingGroupNum = 1;
 let interval;
 let isRotation;
+let fs;//fullscreen
 //var outerDiam = 0;
 //const TWEEN = require('@tweenjs/tween.js')
 const csv2array = (csv, dlm = ',') => {
@@ -57,17 +58,15 @@ function preload()
 function setup () 
 {
   createCanvas(windowWidth, windowHeight, WEBGL);
-  //drawGrid();
   //myScaledCanvas = createGraphics(windowWidth, windowHeight);
   currentScale = 1; 
   background(0);
   //angleMode(DEGREES);
   noStroke();
   //ambientMaterial(255, 0, 0);
-  specularMaterial(139, 116, 87);
+  //specularMaterial(139, 116, 87);
   //rectMode(CENTER);
   colorPalette = ('ac9070-bac55e').split("-").map(a => "#" + a);
-  //colorPalette = ('ac9070C8-1b065eC8-ff47daC8-ff87abC8-bac55eC8').split("-").map(a => "#" + a);
 
   particle = new particles();
 
@@ -77,16 +76,18 @@ function setup ()
   isRotation = false;
 
   translate(-windowWidth/2,-windowHeight/2,0);
+  noCursor();
 
   // _text = createGraphics(window.innerWidth - 4, window.innerHeight - 4);
+  // clear();
   // _text.textFont('Source Code Pro');
   // //_text.textAlign(TOP);
   // _text.textSize(100);
-  // // _text.fill(37,40,33,128);
-  // _text.fill(255,0,0,128);
+  // _text.fill(37,40,33,128);
+  // //_text.fill(255,0,0,128);
   // _text.noStroke();
   // _textShow = millis();
-  // _text.text(_textShow, 500, 100);
+  //_text.text(_textShow, 500, 100);
   //pixelDensity(9); 
   //////////////////////
   // Add some texture
@@ -223,30 +224,35 @@ function rotateGroup(){
     console.log("Showing group: " + showingGroupNum + "/" + totalGroupCount);
     groupCount = showingGroupNum;
     showingGroupNum++;
+
   }
   else 
     showingGroupNum = 1;
 }
 
 
-
 function draw () 
 {
   
   background(0);
-  lights();
-  shininess(70);
+
+
+
+  //text(_text,0,0);
 
   const dirX = (mouseX / width - 0.5) * 2;
   const dirY = (mouseY / height - 0.5) * 2;
-  directionalLight(255, 0, 255, -dirX, -dirY, -1);
- 
+  //directionalLight(255, 0, 255, -dirX, -dirY, -1); // Add this object will become pink?!
+
+  //specularMaterial(139, 116, 87); // pink
+  specularMaterial(172, 144, 112);
+  lights();
+  //ambientLight(50);
+  shininess(70);
 
 
+  
   particle.update();
-
-
-
 
   for (let i=numOfGroup*(groupCount-1);  i<numOfGroup*groupCount; i++)
   {
@@ -280,9 +286,11 @@ function draw ()
 
       push();
       figure[foundIndex].draw();
+     
       pop();
 
     }else{
+      
       if (figure[i]){
         figure[i].draw();
       }  
@@ -395,6 +403,7 @@ class avatar
 
   draw()
   {
+
     
       //console.log("Convert data to avatar");
 
@@ -416,10 +425,10 @@ class avatar
       // push();
       // blendMode(MULTIPLY);
       //image(overAllTexture,0,0);
-      // pop();
+      // pop()
     
-      rotateX(frameCount * 0.00001 * 15); // rotate globally
-
+      rotateZ(frameCount * 0.00001 * 15); // rotate globally
+      //rotateX(PI*3/4);
       push();
 
       //lightFalloff(0.5, 0, 0);
@@ -430,7 +439,7 @@ class avatar
       // head..and neck
       //let head1 =  (7*this.hour+1)+90; // 10h-22h -> 70-155
       //let head2 = 10;
-      let head1 = 6; // at lea)t 90
+      let head1 = 4; // at lea)t 90
       //let sec = this.second;
      
 
@@ -471,7 +480,7 @@ class avatar
       push();
       translate(-20, 100-40, 0);
       rotate(0.5 + sin(frameCount/30)/5)
-      box(50/2, 100/2+this.second, 10/2, 4, 4);
+      box(50/2, 100/2+this.second*1.5, 10/2, 4, 4);
       pop();
 
       // right feet
@@ -734,8 +743,9 @@ function keyReleased() {
   //if (key == 'e') exportHighResolution(); 
   if (key == 'e') saveForPrint("sketch.jpg", "A3", 300, 10);
   if (key == 'f') {
-    let fs = fullscreen(); fullscreen(!fs);
-    socket.emit('fullscreen', fs);
+    fs = fullscreen(); 
+  fullscreen(!fs);
+    //socket.emit('fullscreen', fs);
   }
   if (key == 'c'){
     handleCardId(millis());
