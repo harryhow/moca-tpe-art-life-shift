@@ -92,15 +92,15 @@ function setup ()
   //////////////////////
   // Add some texture
   /////////////////////
-  // pixelDensity(2)
-  // overAllTexture = createGraphics(width,height);
-  // overAllTexture.loadPixels();
-  // for (var i=0 ; i<width+50 ; i++){
-  //   for (var o=0;o<height+50;o++){
-  //     overAllTexture.set(i,o,color(100,noise(i/3,o/3,i*o/50)*random([0,50,100])));
-  //   }
-  // }
-  // overAllTexture.updatePixels();
+  pixelDensity(2)
+  overAllTexture = createGraphics(width,height);
+  overAllTexture.loadPixels();
+  for (var i=0 ; i<width+50 ; i++){
+    for (var o=0;o<height+50;o++){
+      overAllTexture.set(i,o,color(100,noise(i/3,o/3,i*o/50)*random([0,50,100])));
+    }
+  }
+  overAllTexture.updatePixels();
   ////////////////////////
 
   //art=createGraphics(300,300);
@@ -237,7 +237,6 @@ function draw ()
   background(0);
 
 
-
   //text(_text,0,0);
 
   const dirX = (mouseX / width - 0.5) * 2;
@@ -295,8 +294,9 @@ function draw ()
         figure[i].draw();
       }  
     }
-  }  
- 
+  }
+  
+
 
  
 
@@ -397,7 +397,7 @@ class avatar
     this.second = second();
     this.rotation = random(1, -1);
     this.color = colorPalette[getRandomInt(0,colorPalette.length)];
-
+    
   }
 
 
@@ -422,12 +422,9 @@ class avatar
       // }
       // pop()
     
-      // push();
-      // blendMode(MULTIPLY);
-      //image(overAllTexture,0,0);
-      // pop()
+ 
     
-      rotateZ(frameCount * 0.00001 * 15); // rotate globally
+      rotateZ(frameCount  * 0.00001 * 10); // rotate globally
       //rotateX(PI*3/4);
       push();
 
@@ -495,6 +492,7 @@ class avatar
   }
 
   update(){
+
     
   }
 
@@ -533,89 +531,48 @@ class avatar
 //////////////////////////////////
 function particles() {
   
-  /// Declare and assign
-  /// the first-time variables'
-  /// values for use in the update
-  /// method.
   this.incremx = width / 2;
   this.incremy = height / 2;
   this.incremz = height;
   
-  /// Declare a variable to
-  /// track the elements in
-  /// our arrays of values.
   this.index = 0;
-  
-  /// Declare empty arrays
-  /// to hold each geometry's
-  /// attributes (location,
-  /// velocity, moving geometry 
-  /// appearance, and node appearance.)
   this.z = [];
   this.speed = [];
   this.shape = [];
   this.gshape = [];
   
-  /// Declare and assign local variables
-  /// to limit a geometry's velocity.
+  // limit a geometry's velocity.
   let max = -8;
   let min = -5;
   
-  /// Loop through the y locations, within a
-  /// loop for the x locations, within a loop
-  /// for the z locations.
+ // Go through x y z depth
   for (let deep = -height; deep <= height; deep += this.incremz) {
     for (let col = -width / 2; col <= width / 2; col += this.incremx) {
       for (let row = -height / 2; row <= height / 2; row += this.incremy) {
   
-        /// Assign into the arrays
-        /// their initial values.
+        // init z height, speed and shape
         this.z.push(height);
-        
-        /// Use the local variable to
-        /// limit the random velocity.
-        this.speed.push(random(max,min));
-        
-        /// Randomly pick 0,1, or 2 to
-        /// determine which type of geometry
-        /// to output for the moving shape.
+        this.speed.push(random(max,min)); // give limted random speend
         this.shape.push(floor(random(3)));
-        /// Do the same for the node
-        /// geometries.
         this.gshape.push(floor(random(3)));
       }
     }
   }
-  /// Make a method that calculates new values
-  /// and generates fresh output.
+ 
   this.update = function () {
     
-    /// Reset the element counter 
-    /// to the beginning of the arrays.
     this.index = -1;
 
-    /// Loop through each dimension to
-    /// get the positions for the nodes
-    /// and moving geometries.
     for (let deep = -height; deep <= height; deep += this.incremz) {
-
-      /// Set the current 0,0,0 location to
-      /// the center of the x,y in the 
-      /// deep distance of the depth plane.
       translate(0, 0, deep);
       
-      /// Get the x locations from the column loop.
+      // Get the x locations from the column loop.
       for (let col = -width / 2; col <= width / 2; col += this.incremx) {
         
-        /// Output a vertical line along
-        /// the x (column) coordinates.
-        //line(col, -height / 2, col, height / 2);
-        
-        /// Get the y location from  the row loop.
+        // Output a vertical line along        
+        // Get the y location from  the row loop.
         for (let row = -height / 2; row <= height / 2; row += this.incremy) {
 
-          /// Advance the index counter to the next 
-          /// element in the array.
           this.index += 1;
           
           /// Advance the moving geometry's 
@@ -625,89 +582,36 @@ function particles() {
           /// Check the z location for out-of-bounds.
           if (this.z[this.index] < -height + deep) {
             
-            /// Make changes when out-of-bounds.
             /// Reset the z location to nearest.
             this.z[this.index] = height;
             /// Reset velocity to random amount
-            /// limited by the local variables.
             this.speed[this.index] = random(min, max);
             /// Reset shape type to a random kind.
             this.shape[this.index] = floor(random(3));
-            /// Set node shape type to this moving
-            /// geometry's shape.
+            /// Set node shape type to this moving geometry's shape.
             this.gshape[this.index] = this.shape[this.index];
           }
           
-          /// Assign a local variable to
-          /// hold the return of the z location
-          /// interpolated to an r,g,b color range.
-          let cr = map(this.z[this.index], height, -height, 5, 255);
 
-          /// Output a horizontal line
-          /// along the y (row) coordinates. 
+          let cr = map(this.z[this.index], height, -height, 5, 255);
           line(-width / 2, row, width / 2, row);
 
-          /// Isolate a volume to make
-          /// a change to translation
-          /// and/or rotations.
+
           push();
-          
-          /// Set the origin to the position
-          /// of the node for this geometry. 
           translate(col, row, 0);
-          
-          /// Rotate the isolated volume
-          /// into the depth of the z-plane.
           rotateX(-PI * 0.5);
-          
-          /// Set the isolated stroke thickness
-          /// and color to a unique value.
           strokeWeight(2);
           stroke(100, 128);
-          
-          /// Output a vertical line into the
-          /// rotated volume to connect nodes
-          /// between depth planes.
           line(0, -this.incremy, 0, this.incremy);
           pop(); /// Close this volume change.
 
-          /// Isolate a volume to output
-          /// the node geometries.
-          // push();
           
-          // /// Set the origin of this volume
-          // /// to the position of the node
-          // /// at this col, row, deep location.
-          // translate(col, row, 0);
-          
-          // /// Optionally rotate node geometries.
-          // // rotateX(frameCount*0.05+(this.index*0.5));
-          // // rotateY(frameCount*0.05+(this.index*0.5));
-          // // rotateZ(frameCount*0.05+(this.index*0.5));
-
-          // /// Check the node geometry array value
-          // /// to determine which shape to output.
-          // if (this.gshape[this.index] === 0) {
-          //   //circle(0, 0, 100);
-          // } else if (this.gshape[this.index] === 1) {
-          //   //triangle(0, -50, -50, 50, 50, 50);
-          //   //circle(0, 0, 100);
-          // } else if (this.gshape[this.index] === 2) {
-          //   //rect(0, 0, 100);
-          //   //circle(0, 0, 100/2);
-          // }
-          // pop(); /// Close this volume.
-
-          /// Isolate a volume to output
-          /// the moving geometries.
           push();
-          //stroke(255 - cr);
           fill(cr, 128);
 
           translate(col, row, this.z[this.index]);
           
-          /// Optionally rotate the moving
-          /// geometries.
+          // Rotate the moving geometries.
           rotateX(frameCount*0.05+(this.index*0.5));
           rotateY(frameCount*0.05+(this.index*0.5));
           rotateZ(frameCount*0.05+(this.index*0.5));
@@ -716,9 +620,7 @@ function particles() {
             circle(0, 0, 100/2);
           } else if (this.shape[this.index] === 1) {
             triangle(0, -50/2, -50/2, 50/2, 50/2, 50/2);
-            //circle(0, 0, 10);
           } else if (this.shape[this.index] === 2) {
-            //rect(0, 0, 100);
             circle(0, 0, 1);
           }
           pop(); /// Close this volume.
