@@ -77,49 +77,6 @@ function setup ()
 
   translate(-windowWidth/2,-windowHeight/2,0);
   noCursor();
-
-  // _text = createGraphics(window.innerWidth - 4, window.innerHeight - 4);
-  // clear();
-  // _text.textFont('Source Code Pro');
-  // //_text.textAlign(TOP);
-  // _text.textSize(100);
-  // _text.fill(37,40,33,128);
-  // //_text.fill(255,0,0,128);
-  // _text.noStroke();
-  // _textShow = millis();
-  //_text.text(_textShow, 500, 100);
-  //pixelDensity(9); 
-  //////////////////////
-  // Add some texture
-  /////////////////////
-  pixelDensity(2)
-  overAllTexture = createGraphics(width,height);
-  overAllTexture.loadPixels();
-  for (var i=0 ; i<width+50 ; i++){
-    for (var o=0;o<height+50;o++){
-      overAllTexture.set(i,o,color(100,noise(i/3,o/3,i*o/50)*random([0,50,100])));
-    }
-  }
-  overAllTexture.updatePixels();
-  ////////////////////////
-
-  //art=createGraphics(300,300);
-  //RGG(139, 116, 87) for hotel royal
-
-  // let newRow = csvTable.addRow();
-  // newRow.setString('time', "55555555");
-  // newRow.setString('id', "6666666");// card id
-  // newRow.setString('x', "7777777");
-  // newRow.setString('y', "8888888");
-  // newRow.setString('z', "9999999");  
-  
-  //save(csvTable, 'scan-record.csv');
-
-    //print the results
-    // for (let r = 0; r < csvTable.getRowCount(); r++)
-    // for (let c = 0; c < csvTable.getColumnCount(); c++)
-    //   //print(csvTable.getString(r, c));
-    //   console.log(csvTable.getString(r, c));
 }
 
 function isCardDuplicated(item){
@@ -298,9 +255,6 @@ function draw ()
   
 
 
- 
-
-
   //translate(240, 0, 0);
 
  
@@ -403,26 +357,6 @@ class avatar
 
   draw()
   {
-
-    
-      //console.log("Convert data to avatar");
-
-      // //3d ripple effect can apply as material
-      // background(255);
-      // for (let i = 50; i < width - 50; i += 50) {
-      //     r = r + 1
-      //     art.noFill()
-      //     art.stroke(r, i, i)
-      //     art.strokeWeight(2)
-      //     translate(0,0)
-      //     art.ellipse(100+i,100+i, r+i, r+i)
-      // }
-      // if (r > width-50 || r < 0 || r > height-50 || r < 0) {
-      //   r -= r
-      // }
-      // pop()
-    
- 
     
       rotateZ(frameCount  * 0.00001 * 10); // rotate globally
       //rotateX(PI*3/4);
@@ -630,15 +564,15 @@ function particles() {
   }
 }
 
-function exportHighResolution() {
-  let scale = 5;
-  myScaledCanvas = createGraphics(scale * windowWidth, scale * windowHeight);
-  draw();
-  save(myScaledCanvas, "highResImage", 'png');
+// function exportHighResolution() {
+//   let scale = 5;
+//   myScaledCanvas = createGraphics(scale * windowWidth, scale * windowHeight);
+//   draw();
+//   save(myScaledCanvas, "highResImage", 'png');
 
-  myScaledCanvas = createGraphics(windowWidth, windowHeight);
-  draw();
-}
+//   myScaledCanvas = createGraphics(windowWidth, windowHeight);
+//   draw();
+// }
 
 
 function keyReleased() { 
